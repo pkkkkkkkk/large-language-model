@@ -1,0 +1,853 @@
+:root {
+  --sidebar-width: 300px;
+  --sidebar-collapsed-width: 80px;
+  --danger-color: #d93025;
+  
+  /* 浅色主题 (默认) */
+  --theme-sidebar-bg: #f0f4f9;
+  --theme-main-bg: #ffffff;
+  --theme-primary-color: #1a73e8;
+  --theme-primary-hover-color: #1765cc;
+  --theme-text-color: #3c4043;
+  --theme-secondary-text-color: #5f6368;
+  --theme-border-color: #e0e0e0;
+  --theme-user-msg-bg: #e6f7ff;
+  --theme-bot-msg-bg: #f1f3f4;
+  --theme-newchat-bg: #d2e3fc;
+  --theme-newchat-text: #0b57d0;
+  --theme-history-hover-bg: #e0e6ec;
+  --theme-history-active-bg: #d2e3fc;
+  --theme-input-bg: #ffffff;
+  --theme-input-border: #dfe1e5;
+  --theme-input-shadow: rgba(32,33,36,0.28);
+  --theme-input-text-color: #000000; 
+}
+.app-layout[data-theme='dark'] {
+  /* 深色主题 */
+  --theme-sidebar-bg: #202124;
+  --theme-main-bg: #2d2f34;
+  --theme-primary-color: #8ab4f8;
+  --theme-primary-hover-color: #99c0ff;
+  --theme-text-color: #e8eaed;
+  --theme-secondary-text-color: #969ba1;
+  --theme-border-color: #5f6368;
+  --theme-user-msg-bg: #374a64;
+  --theme-bot-msg-bg: #3c4043;
+  --theme-newchat-bg: #374a64;
+  --theme-newchat-text: #8ab4f8;
+  --theme-history-hover-bg: #3c4043;
+  --theme-history-active-bg: #374a64;
+  --theme-input-bg: #3c4043;
+  --theme-input-border: #5f6368;
+  --theme-input-shadow: rgba(0,0,0,0.5);
+  --theme-input-text-color: #e8eaed; /* 深色模式下，输入框文字为浅色 */
+}
+
+html, body {
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background-color: var(--theme-main-bg); /* 使用变量 */
+  color: var(--theme-text-color); /* 使用变量 */
+}
+
+.app-layout {
+  display: flex;
+  height: 100%;
+  overflow: hidden; 
+}
+
+/* --- Sidebar --- */
+.sidebar { width: var(--sidebar-width); background-color: var(--theme-sidebar-bg); display: flex; flex-direction: column; justify-content: space-between; padding: 12px; transition: width 0.3s ease, padding 0.3s ease; flex-shrink: 0; box-sizing: border-box; }
+.sidebar-top { display: flex; flex-direction: column; }
+.sidebar-header { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; padding: 8px; }
+.sidebar-toggle { background: none; border: none; border-radius: 50%; width: 48px; height: 48px; display: flex; justify-content: center; align-items: center; cursor: pointer; color: var(--theme-secondary-text-color); flex-shrink: 0; }
+.sidebar-toggle:hover { background-color: var(--theme-history-hover-bg); }
+.sidebar-button { display: flex; align-items: center; gap: 12px; background-color: var(--theme-newchat-bg); color: var(--theme-newchat-text); border: none; border-radius: 24px; padding: 0 20px; height: 48px; font-size: 14px; cursor: pointer; white-space: nowrap; flex-shrink: 0; overflow: hidden; transition: padding 0.3s ease, width 0.3s ease; }
+.sidebar-button .btn-text { transition: opacity 0.2s ease; }
+.history-nav { flex-grow: 1; overflow-y: auto; overflow-x: hidden; transition: opacity 0.2s ease; }
+.history-nav .nav-title { font-size: 14px; font-weight: 500; color: var(--theme-secondary-text-color); padding: 10px 16px; margin: 0; white-space: nowrap; }
+.history-list { list-style: none; padding: 0 16px; margin: 0; }
+.history-list li { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 24px; cursor: pointer; white-space: nowrap; overflow: hidden; font-size: 14px; color: var(--theme-text-color); position: relative; margin-top: 4px; }
+.history-list li:hover { background-color: var(--theme-history-hover-bg); }
+.history-list li.active { background-color: var(--theme-history-active-bg); font-weight: 500; }
+.history-title { flex-grow: 1; overflow: hidden; text-overflow: ellipsis; }
+.history-item-actions { opacity: 0; visibility: hidden; display: flex; gap: 4px; transition: opacity 0.2s ease, visibility 0.2s ease; }
+.history-list li:hover .history-item-actions { opacity: 1; visibility: visible; }
+.history-item-actions button { background: none; border: none; cursor: pointer; padding: 4px; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--theme-secondary-text-color); }
+.history-item-actions button:hover { background-color: rgba(255,255,255,0.1); }
+.history-item-actions .delete-btn:hover { color: var(--danger-color); }
+.history-list li input { width: 100%; font: inherit; padding: 2px 4px; margin: 0; border: none; background: var(--theme-input-bg); color: var(--theme-text-color); border-radius: 4px; }
+.sidebar-footer { padding: 8px; }
+.theme-toggle { display: flex; align-items: center; gap: 12px; width: 100%; background: none; border: none; border-radius: 24px; color: var(--theme-text-color); padding: 12px 20px; font-size: 14px; cursor: pointer; }
+.theme-toggle:hover { background-color: var(--theme-history-hover-bg); }
+.app-layout[data-theme='light'] .icon-moon { display: block; }
+.app-layout[data-theme='light'] .icon-sun { display: none; }
+.app-layout[data-theme='dark'] .icon-moon { display: none; }
+.app-layout[data-theme='dark'] .icon-sun { display: block; }
+.app-layout.sidebar-collapsed .sidebar { width: var(--sidebar-collapsed-width); padding: 12px 0; }
+.app-layout.sidebar-collapsed .sidebar-header { flex-direction: column; }
+.app-layout.sidebar-collapsed .sidebar-button { padding: 0; width: 48px; justify-content: center; }
+.app-layout.sidebar-collapsed .sidebar .btn-text {
+  display: none;
+}
+.app-layout.sidebar-collapsed .sidebar .history-nav {
+  display: none;
+}
+.app-layout.sidebar-collapsed .sidebar .sidebar-footer {
+  padding: 8px 0;
+}
+.app-layout.sidebar-collapsed .sidebar .theme-toggle {
+  justify-content: center;
+}
+
+/* --- Main Content (Unchanged) --- */
+.main-content {
+  flex-grow: 1;
+  background-color: var(--theme-main-bg);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+.chat-header {
+  border-bottom: 1px solid var(--theme-border-color);
+  text-align: center;
+  flex-shrink: 0;
+  padding: 16px 24px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+.chat-header h1 { margin: 0; font-size: 1.5rem; color: var(--theme-text-color); }
+
+.chat-history {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+  scrollbar-width: none; /* 适用于 Firefox */
+  -ms-overflow-style: none;  /* 适用于 Internet Explorer 和 Edge */
+}
+.chat-history::-webkit-scrollbar {
+  display: none;
+}
+
+/* 新增头像样式 */
+    .chat-message {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      max-width: 95%;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    
+    .user-message {
+      flex-direction: row-reverse;
+      align-self: flex-end;
+    }
+    
+    .bot-message {
+      align-self: flex-start;
+    }
+    
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    .user-avatar {
+      background-color: #1a73e8;
+      color: white;
+    }
+    
+    .bot-avatar {
+      background-color: #f1f3f4;
+      color: #3c4043;
+      border: 1px solid #e0e0e0;
+    }
+    
+    .message-content {
+      padding: 12px 16px;
+      border-radius: 18px;
+      max-width: calc(100% - 60px);
+    }
+    
+    /* 深色模式适配 */
+    .app-layout[data-theme='dark'] .bot-avatar {
+      background-color: #3c4043;
+      color: #e8eaed;
+      border-color: #5f6368;
+    }
+/* .chat-message { display: flex; flex-direction: column; gap: 8px; max-width: 95%; line-height: 1.6; }
+.message-content { padding: 12px 16px; border-radius: 18px; }
+.user-message { align-self: flex-end; } */
+.user-message .message-content { background-color: var(--theme-user-msg-bg); color: var(--theme-text-color); }
+/* .bot-message { align-self: flex-start; } */
+.bot-message .message-content { background-color: var(--theme-bot-msg-bg); border: 1px solid var(--theme-border-color); color: var(--theme-text-color); white-space: pre-wrap; }
+
+
+.chat-input-area {
+  padding: 0;
+  margin: 0 24px 45px 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 28px; /* 增加圆角使其更圆润 */
+  background-color: var(--theme-input-bg);
+  border: 1px solid var(--theme-input-border);
+  box-shadow: 0 1px 3px 0 var(--theme-input-shadow);
+  transition: box-shadow 0.2s;
+  padding: 8px; /* 调整容器内边距 */
+}
+.chat-input-area:focus-within {
+  box-shadow: 0 2px 6px 1px var(--theme-input-shadow);
+}
+
+#userInput {
+  flex-grow: 1;
+  /**************************************************/
+  /** ↓↓↓ 关键改动：增加上下内边距来提升高度     ↓↓↓ **/
+  /**************************************************/
+  padding: 8px 12px; 
+
+  font-size: 1rem;
+  line-height: 1; /* 增加行高以改善多行文本显示 */
+  border: none;
+  background-color: transparent;
+  color: var(--theme-input-text-color);
+  outline: none;
+  resize: none; /* 禁止用户手动调整大小，保持UI统一 */
+  max-height: 150px; /* 设定一个最大高度，例如200px */
+  min-height: 60px; /* 您可以按需调整这个值，例如 60px */
+  overflow-y: auto; /* 当内容超出最大高度时，显示垂直滚动条 */
+}
+
+#sendButton {
+  background-color: var(--theme-primary-color);
+  border: none;
+  border-radius: 50%;
+  width: 48px; /* 尺寸微调 */
+  height: 48px; /* 尺寸微调 */
+  cursor: pointer;
+  color: var(--theme-main-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2px;
+  flex-shrink: 0;
+  align-self: flex-end; /* 让按钮在输入框变高时能固定在右下角 */
+  transition: background-color 0.3s;
+}
+#sendButton:hover {
+  background-color: var(--theme-primary-hover-color);
+}
+#sendButton:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+/* 终止按钮特效 */
+#sendButton.aborting {
+  background-color: #d93025;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+.right-sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--theme-sidebar-bg);
+  flex-shrink: 0;
+  padding: 12px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease, padding 0.3s ease;
+  border-left: 1px solid var(--theme-border-color);
+}
+
+.right-sidebar .sidebar-header {
+  padding: 8px;
+}
+
+.right-sidebar .right-aligned {
+  flex-direction: row-reverse;
+}
+.right-sidebar .sidebar-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--theme-text-color);
+  padding: 0 16px;
+  white-space: nowrap;
+}
+
+.right-sidebar .right-sidebar-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: opacity 0.2s ease;
+}
+
+.right-sidebar .right-sidebar-content .nav-title {
+  /* 复用左侧样式 */
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--theme-secondary-text-color);
+  padding: 10px 16px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.right-sidebar-content ul {
+  list-style: none;
+  padding: 0 16px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.right-sidebar-content li {
+  background-color: var(--theme-main-bg);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--theme-border-color);
+}
+.right-sidebar-content li h4 {
+  margin: 0 0 8px 0;
+  color: var(--theme-text-color);
+}
+.right-sidebar-content li p {
+  margin: 0;
+  color: var(--theme-secondary-text-color);
+  font-size: 14px;
+}
+.right-sidebar-content li ol li {
+  color: var(--theme-secondary-text-color);
+  /* 您也可以使用 --theme-text-color，根据您希望的深浅来定 */
+}
+/* --- 右侧边栏折叠逻辑 --- */
+.app-layout.right-sidebar-collapsed .right-sidebar {
+  width: var(--sidebar-collapsed-width);
+  padding: 12px 0;
+}
+.app-layout.right-sidebar-collapsed .right-sidebar .sidebar-header {
+    flex-direction: column-reverse; /* 保持按钮在上方 */
+}
+/* 复用 .btn-text 类来隐藏所有文字 */
+.app-layout.right-sidebar-collapsed .right-sidebar .btn-text {
+  display: none;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #c7c7c7; }
+/* 登录注册页面样式 */
+.auth-container {
+  max-width: 360px;
+  margin: 80px auto;
+  padding: 40px 30px;
+  border-radius: 12px;
+  background-color: var(--theme-bot-msg-bg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--theme-border-color);
+}
+
+.auth-container h2 {
+  text-align: center;
+  color: var(--theme-text-color);
+  margin-bottom: 24px;
+}
+
+.auth-container input {
+  width: 90%;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--theme-border-color);
+  background-color: var(--theme-input-bg);
+  color: var(--theme-text-color);
+  outline: none;
+}
+
+.auth-container input:focus {
+  border-color: var(--theme-primary-color);
+}
+
+.auth-container button {
+  width: 100%;
+  background-color: var(--theme-primary-color);
+  color: white;
+  font-size: 1rem;
+  padding: 12px 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.auth-container button:hover {
+  background-color: var(--theme-primary-hover-color);
+}
+
+.auth-container p {
+  text-align: center;
+  color: var(--theme-secondary-text-color);
+  margin-top: 16px;
+}
+
+.auth-container a {
+  color: var(--theme-primary-color);
+  text-decoration: none;
+}
+
+.auth-container a:hover {
+  text-decoration: underline;
+}
+.user-info-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 24px;
+  color: var(--theme-text-color);
+  padding: 12px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background-color 0.3s;
+}
+
+.user-info-button:hover {
+  background-color: var(--theme-history-hover-bg);
+}
+
+/* 用户信息框样式 */
+.user-details {
+  background: var(--theme-main-bg);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: none;
+  position: relative;
+  border: 1px solid var(--theme-border-color);
+}
+
+.user-details.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.user-detail-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user-id {
+  font-size: 14px;
+  padding: 8px 12px;
+  background: var(--theme-input-bg);
+  border-radius: 6px;
+  border: 1px solid var(--theme-border-color);
+  color: var(--theme-text-color);
+}
+
+.change-password-btn {
+  background: var(--theme-primary-color);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.change-password-btn:hover {
+  background: var(--theme-primary-hover-color);
+}
+
+/* 侧边栏折叠时的调整 */
+.app-layout.sidebar-collapsed .user-info-button {
+  padding: 0;
+  width: 78px;
+  justify-content: center;
+}
+
+.app-layout.sidebar-collapsed .user-info-button .btn-text {
+  display: none;
+}
+
+.app-layout.sidebar-collapsed .user-details {
+  display: none !important;
+}
+
+/* 修改密码表单样式 */
+    .change-password-form {
+      display: none;
+      margin-top: 15px;
+      padding: 15px;
+      background: var(--theme-input-bg);
+      border-radius: 8px;
+      border: 1px solid var(--theme-border-color);
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .change-password-form input {
+      width: 90%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid var(--theme-border-color);
+      border-radius: 6px;
+      background: var(--theme-main-bg);
+      color: var(--theme-text-color);
+    }
+    
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .form-actions button {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .submit-password-btn {
+      background: var(--theme-primary-color);
+      color: white;
+    }
+    
+    .cancel-password-btn {
+      background: var(--theme-bot-msg-bg);
+      color: var(--theme-text-color);
+    }
+    
+    /* 退出登录按钮样式 */
+    .logout-btn {
+      width: 100%;
+      background: #d93025;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+    
+    .logout-btn:hover {
+      background: #c3221d;
+    }
+    
+
+#loginMessage, #registerMessage {
+  text-align: center;
+  color: var(--danger-color);
+  margin-top: 8px;
+}
+
+/* 容器样式：卡片整体外壳 */
+.recipe-card-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px auto;
+  max-width: 720px;
+  width: 100%;
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+
+/* 卡片本体 */
+.recipe-card {
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* 标题 */
+.recipe-title {
+  margin-top: 0;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+/* 图片 */
+.recipe-image {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+/* 每个内容模块 */
+.recipe-section {
+  margin-bottom: 16px;
+}
+
+/* 材料/佐料的 tag 样式 */
+.tag {
+  display: inline-block;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 8px;
+  padding: 4px 10px;
+  margin: 4px 6px 0 0;
+  font-size: 14px;
+}
+
+/* 做法列表 */
+.recipe-section ol {
+  padding-left: 20px;
+}
+
+.recipe-section li {
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+/* 元数据模块（热量与价格） */
+.recipe-meta {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  color: #333;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+  margin-top: 20px;
+}
+
+/* 营养建议段落 */
+.recipe-section p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.recipe-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+
+.copy-button,
+.redo-button {
+  background-color: var(--theme-primary-color);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-left: 12px; /* 控制按钮间距 */
+}
+
+.copy-button:hover {
+  background-color: var(--theme-primary-hover-color);
+  transform: scale(1.02);
+}
+
+.copy-button.copied {
+  background-color: #34a853;
+}
+
+.redo-button {
+  background-color: #ffa726;
+}
+
+.redo-button:hover {
+  background-color: #fb8c00;
+  transform: scale(1.02);
+}
+
+/* 按钮容器 */
+.recipe-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+/* 1. 确保所有头像容器内的图片都能正确显示为圆形 */
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 保证图片不变形，并填满圆形容器 */
+  border-radius: 50%; /* 确保图片本身也是圆的 */
+}
+
+/* 2. 确保所有头像容器内的SVG图标也能正确显示 */
+.avatar svg {
+  width: 22px;   /* 统一设置一个合适的图标尺寸 */
+  height: 22px;
+  color: inherit; /* 颜色继承自父元素 */
+}
+
+/* 3. 用户默认头像图标的颜色 */
+.user-avatar svg.user-default-icon {
+  color: #ffffff; /* 在蓝色背景上显示为白色 */
+}
+
+/* 4. 页脚按钮里的用户默认头像 */
+.user-info-button svg.user-default-icon {
+  width: 24px; /* 尺寸与容器匹配 */
+  height: 24px;
+  color: var(--theme-text-color); /* 颜色继承自主题，以适应浅色/深色模式 */
+}
+
+/* 5. 机器人头像的背景和边框 */
+/* 因为现在它只显示图片，不再需要文字颜色 */
+.bot-avatar {
+  background-color: var(--theme-bot-msg-bg);
+  border: 1px solid var(--theme-border-color);
+}
+
+/* 6. 深色模式适配 */
+.app-layout[data-theme='dark'] .bot-avatar {
+  background-color: #3c4043;
+  border-color: #5f6368;
+}
+
+.user-message {
+  /* user-message 已经有 flex-direction: row-reverse; 我们需要确保垂直对齐 */
+  align-items: center; 
+  gap: 8px; /* 在元素之间增加一点间距 */
+}
+
+/* 2. 复制按钮的样式 */
+.copy-btn {
+  /* 移除绝对定位，让它成为flex布局的一部分 */
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--theme-secondary-text-color);
+  
+  /* 默认隐藏，通过透明度实现 */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+/* ✅ 修改：使用 order 属性重新排列元素，将按钮放在消息右侧 */
+.user-message .message-content {
+  order: 2; 
+}
+.user-message .copy-btn {
+  order: 3; 
+}
+.user-message .avatar {
+  order: 1; 
+}
+
+
+/* 3. 当鼠标悬停在整个用户消息行上时，显示复制按钮 */
+.user-message:hover .copy-btn {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 4. 复制按钮的悬停效果 */
+.copy-btn:hover {
+  background-color: var(--theme-history-hover-bg);
+  color: var(--theme-text-color);
+}
+
+/* 5. (可选但推荐) 为用户消息行增加一点内边距，让悬停区域更大更易用 */
+.chat-message.user-message {
+    padding: 4px 0;
+}
+
+#loginMessage, #registerMessage {
+  text-align: center;
+  color: var(--danger-color);
+  margin-top: 8px;
+}
+
+
+#micButton {
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  color: var(--theme-secondary-text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#micButton:hover {
+  background-color: var(--theme-history-hover-bg);
+}
+
+/* “正在聆听”状态下的样式 */
+#micButton.listening {
+  color: var(--danger-color); /* 变为红色 */
+  animation: pulse 1.5s infinite; /* 应用呼吸灯动画 */
+}
+
+/* 定义呼吸灯动画 */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(217, 48, 37, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(217, 48, 37, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(217, 48, 37, 0);
+  }
+}

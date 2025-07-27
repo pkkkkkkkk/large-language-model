@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>食悟美食助手</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="app-layout" id="appLayout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <button class="sidebar-toggle" id="sidebarToggle" title="菜单">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <button class="sidebar-button" id="newChatBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+          <span class="btn-text">发起新对话</span>
+        </button>
+      </div>
+      <nav class="history-nav">
+        <p class="nav-title">历史记录</p>
+        <ul class="history-list" id="historyList">
+          </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-details" id="userDetails">
+          <div class="user-detail-box">
+            <input type="text" class="user-id" id="userIdDisplay" readonly>
+            <button class="change-password-btn" id="changePasswordBtn">修改密码</button>
+            <!-- 修改密码表单 -->
+            <div class="change-password-form" id="changePasswordForm">
+              <input type="password" id="oldPassword" placeholder="旧密码" required>
+              <input type="password" id="newPassword" placeholder="新密码" required>
+              <input type="password" id="confirmPassword" placeholder="确认新密码" required>
+              <div class="form-actions">
+                <button class="submit-password-btn" id="submitPasswordBtn">提交</button>
+                <button class="cancel-password-btn" id="cancelPasswordBtn">取消</button>
+              </div>
+            </div>
+        
+            <!-- 退出登录按钮 -->
+            <button class="logout-btn" id="logoutBtn">退出登录</button>
+          </div>
+        </div>
+        <button class="user-info-button" id="userInfoBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="btn-text">欢迎，用户名</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" title="切换主题">
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <span class="btn-text">切换主题</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+      <div class="chat-container">
+        <div class="chat-header">
+          <h1>食悟美食助手 🍳</h1>
+        </div>
+        <div class="chat-history" id="chatHistory">
+          </div>
+        <div class="chat-input-area">
+           <button id="micButton" title="语音输入">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </button>
+          <textarea id="userInput" placeholder="问一问食悟美食助手…" rows="1"></textarea>
+          <button id="sendButton" title="发送消息">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2 .01 7z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </main>
+    
+  <aside class="right-sidebar" id="rightSidebar">
+      <div class="sidebar-header right-aligned">
+        <button class="sidebar-toggle" id="rightSidebarToggle" title="展开/折叠推荐栏">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="12" x2="3" y2="12"></line><line x1="21" y1="6" x2="9" y2="6"></line><line x1="21" y1="18" x2="9" y2="18"></line></svg>
+        </button>
+        <h3 class="btn-text">每日推荐</h3>
+      </div>
+      <div class="right-sidebar-content">
+        <p class="nav-title btn-text">今日美食</p>
+        <ul id="recommendation-list" class="btn-text"></ul>
+      </div>
+    </aside>
+  </div>
+
+  <script src="main.js"></script>
+  <script>
+  function logout() {
+    localStorage.removeItem("authToken");
+    window.location.href = "index.html";
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</body>
+</html>

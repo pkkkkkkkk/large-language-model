@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>登录</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="auth-container">
+    <h2>登录</h2>
+    <input type="text" id="loginUsername" placeholder="用户名" />
+    <input type="password" id="loginPassword" placeholder="密码" />
+    <button onclick="login()">登录</button>
+    <p>还没有账号？<a href="register.html">注册</a></p>
+    <p id="loginMessage"></p>
+  </div>
+  <script>
+    async function login() {
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      const message = document.getElementById("loginMessage");
+
+      if (!username || !password) {
+        message.textContent = "请输入用户名和密码";
+        return;
+      }
+      
+      try {
+        const res = await fetch("http://localhost:8000/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem("authToken", "1");  // 模拟登录成功令牌
+          localStorage.setItem("username", username);
+          window.location.href = "main.html";
+        } else {
+          message.textContent = "登录失败：" + (data.message || "请检查用户名密码");
+        }
+      } catch (err) {
+        message.textContent = "服务器错误，请稍后重试";
+      }
+    }
+  </script>
+</body>
+</html>
